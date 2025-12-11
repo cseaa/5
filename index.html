@@ -8,12 +8,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Ninu Nanna Prana Kandama</title>
     
-    <!-- Premium Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400;1,600&family=Outfit:wght@200;300;400;500;700&family=Parisienne&display=swap" rel="stylesheet">
     
-    <!-- Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
@@ -460,10 +458,8 @@
 
     <div class="app-shell">
         
-        <!-- Canvas Background -->
         <canvas id="particleCanvas"></canvas>
 
-        <!-- Header -->
         <header class="app-header">
             <div class="brand-logo">Ninu Nanna Prana Kandama</div>
             
@@ -477,13 +473,10 @@
             </div>
         </header>
 
-        <!-- Main Content Viewport -->
         <main class="main-viewport" id="mainContent">
 
-            <!-- PAGE 1: HOME -->
             <section id="home" class="page-section active">
                 
-                <!-- Hero Image -->
                 <div class="hero-card">
                     <div class="hero-image-wrapper">
                         <img src="1.jpg" class="hero-img" alt="My Beautiful Wife" onerror="this.src='https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?q=80&w=1000&auto=format&fit=crop'">
@@ -494,7 +487,6 @@
                     </div>
                 </div>
 
-                <!-- Stats Grid -->
                 <div class="widget-grid">
                     <div class="glass-panel" style="display:flex; flex-direction:column; justify-content:center;">
                         <div class="counter-label">Days Together</div>
@@ -507,7 +499,6 @@
                     </div>
                 </div>
 
-                <!-- Daily Quote -->
                 <div class="glass-panel" style="margin-bottom: 24px;">
                     <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
                         <span style="font-size:0.65rem; text-transform:uppercase; letter-spacing:1px; color:#aaa;">Daily Reminder</span>
@@ -520,7 +511,6 @@
 
             </section>
 
-            <!-- PAGE 2: JOURNEY -->
             <section id="journey" class="page-section">
                 <h2 style="font-family:'Cormorant Garamond'; font-size:2rem; margin-bottom:5px;">Our Story</h2>
                 <p style="color:#aaa; font-size:0.85rem; margin-bottom:20px;">Every moment with you is precious.</p>
@@ -548,7 +538,6 @@
                 </div>
             </section>
 
-            <!-- PAGE 3: LETTERS -->
             <section id="letters" class="page-section">
                 <h2 style="font-family:'Cormorant Garamond'; font-size:2rem; margin-bottom:5px;">Open When...</h2>
                 <p style="color:#aaa; font-size:0.85rem; margin-bottom:20px;">Little reminders for every mood.</p>
@@ -581,7 +570,6 @@
                 </div>
             </section>
 
-            <!-- PAGE 4: PROFILE -->
             <section id="profile" class="page-section">
                 <div style="text-align:center; margin-bottom:25px; margin-top:10px;">
                     <div style="width:120px; height:120px; border-radius:50%; border:3px solid var(--accent-gold); padding:4px; margin:0 auto 15px;">
@@ -610,7 +598,6 @@
 
         </main>
 
-        <!-- Music Player Mini Bar (Floating above Nav) -->
         <div class="music-player-bar" id="musicBar">
             <div style="width:36px; height:36px; background:#333; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 <i data-lucide="music" size="18" color="white"></i>
@@ -621,12 +608,15 @@
             </div>
             <div class="play-controls">
                 <i data-lucide="skip-back" size="18" style="cursor:pointer; opacity:0.8;" onclick="musicPlayer.prev()"></i>
-                <i data-lucide="play" id="playPauseIcon" size="20" style="cursor:pointer; color:var(--primary-light);" onclick="musicPlayer.toggle()"></i>
+                
+                <div id="playPauseWrapper" onclick="musicPlayer.toggle()" style="cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                    <i data-lucide="play" size="20" fill="var(--primary-light)" style="color:var(--primary-light);"></i>
+                </div>
+
                 <i data-lucide="skip-forward" size="18" style="cursor:pointer; opacity:0.8;" onclick="musicPlayer.next()"></i>
             </div>
         </div>
 
-        <!-- Navigation (Floating Dock) -->
         <nav class="nav-bar">
             <button class="nav-item active" data-target="home">
                 <i data-lucide="home" size="22"></i>
@@ -646,7 +636,6 @@
             </button>
         </nav>
 
-        <!-- Modal Sheet -->
         <div class="modal-overlay" id="modalOverlay" onclick="app.closeModal(event)">
             <div class="modal-sheet">
                 <div class="sheet-handle"></div>
@@ -767,7 +756,7 @@
         }
 
         /**
-         * MUSIC PLAYER ENGINE
+         * MUSIC PLAYER ENGINE (FIXED)
          */
         class MusicPlayer {
             constructor() {
@@ -775,7 +764,9 @@
                 this.toggleBtn = document.getElementById('playlistToggle');
                 this.titleEl = document.getElementById('trackTitle');
                 this.artistEl = document.getElementById('trackArtist');
-                this.icon = document.getElementById('playPauseIcon');
+                
+                // Get the wrapper DIV instead of the icon directly
+                this.iconWrapper = document.getElementById('playPauseWrapper');
                 
                 this.playlist = [
                     { title: "Song for my Papu Devate Kandama", artist: "Relaxing Vibes", src: "radhe.mp3" },
@@ -841,14 +832,13 @@
             }
 
             updateIcon() {
-                // Re-render icon based on state
+                // FIXED: Logic to safely swap the icon using the wrapper
                 if(this.isPlaying) {
-                    this.icon.innerHTML = '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>'; 
-                    this.icon.setAttribute('fill', 'white');
+                    this.iconWrapper.innerHTML = '<i data-lucide="pause" size="20" fill="var(--primary-light)" style="color:var(--primary-light);"></i>';
                 } else {
-                    this.icon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
-                    this.icon.setAttribute('fill', 'white');
+                    this.iconWrapper.innerHTML = '<i data-lucide="play" size="20" fill="var(--primary-light)" style="color:var(--primary-light);"></i>';
                 }
+                // Important: Re-scan for the new icon
                 lucide.createIcons();
             }
         }
@@ -940,4 +930,3 @@
     </script>
 </body>
 </html>
-
